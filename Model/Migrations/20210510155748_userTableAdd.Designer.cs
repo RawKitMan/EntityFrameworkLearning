@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model;
 
 namespace Model.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210510155748_userTableAdd")]
+    partial class userTableAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +28,6 @@ namespace Model.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ApproverId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -37,14 +36,7 @@ namespace Model.Migrations
                     b.Property<DateTime?>("ExpenseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("RequesterId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ApproverId");
-
-                    b.HasIndex("RequesterId");
 
                     b.ToTable("ExpenseHeaders");
                 });
@@ -64,11 +56,6 @@ namespace Model.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalCost")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("decimal(16,2)")
-                        .HasComputedColumnSql("[Quantity] * [UnitCost]");
 
                     b.Property<decimal>("UnitCost")
                         .HasColumnType("decimal(16,2)");
@@ -98,21 +85,6 @@ namespace Model.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Model.ExpenseHeader", b =>
-                {
-                    b.HasOne("Model.User", "Approver")
-                        .WithMany("ApproverExpenseHeaders")
-                        .HasForeignKey("ApproverId");
-
-                    b.HasOne("Model.User", "Requester")
-                        .WithMany("RequesterExpenseHeaders")
-                        .HasForeignKey("RequesterId");
-
-                    b.Navigation("Approver");
-
-                    b.Navigation("Requester");
-                });
-
             modelBuilder.Entity("Model.ExpenseLine", b =>
                 {
                     b.HasOne("Model.ExpenseHeader", "ExpenseHeader")
@@ -127,13 +99,6 @@ namespace Model.Migrations
             modelBuilder.Entity("Model.ExpenseHeader", b =>
                 {
                     b.Navigation("ExpenseLines");
-                });
-
-            modelBuilder.Entity("Model.User", b =>
-                {
-                    b.Navigation("ApproverExpenseHeaders");
-
-                    b.Navigation("RequesterExpenseHeaders");
                 });
 #pragma warning restore 612, 618
         }

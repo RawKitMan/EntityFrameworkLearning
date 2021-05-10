@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 namespace Model
 {
     public class ExpenseHeader
@@ -11,5 +13,14 @@ namespace Model
         [MinLength(10)]
         public string Description { get; set; }
         public DateTime? ExpenseDate { get; set; }
+        [ForeignKey("Requester")]
+        public int? RequesterId { get; set; }
+        [InverseProperty("RequesterExpenseHeaders")]
+        public User Requester { get; set; }
+        [ForeignKey("Approver")]
+        public int? ApproverId { get; set; }
+        [InverseProperty("ApproverExpenseHeaders")]
+        public User Approver { get; set; }
+        public List<ExpenseLine> ExpenseLines { get; set; }
     }
 }
