@@ -13,6 +13,7 @@ namespace Model
         [MinLength(10)]
         public string Description { get; set; }
         public DateTime? ExpenseDate { get; set; }
+        public decimal UsdExchangeRate { get; set; }
         [ForeignKey("Requester")]
         public int? RequesterId { get; set; }
         [InverseProperty("RequesterExpenseHeaders")]
