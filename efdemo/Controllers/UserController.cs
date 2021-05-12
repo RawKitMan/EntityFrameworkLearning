@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Model;
 using Microsoft.EntityFrameworkCore;
+using Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,16 +16,19 @@ namespace efdemo.Controllers
     public class UserController : ControllerBase
     {
         private ApplicationDbContext _context;
+        private IUnitOfWork _unitofwork;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitofwork = unitOfWork;
         }
         // GET: api/<UserController>
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            List<User> users = _context.Users.ToList();
+            List<User> users = _unitofwork.Users.GetAll().ToList();
+            //List<User> users = _context.Users.ToList();
             return users;
         }
 
@@ -32,7 +36,8 @@ namespace efdemo.Controllers
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            User user = _context.Users.Find(id);
+            User user = _unitofwork.Users.Get(id);
+            //User user = _context.Users.Find(id);
             return user;
         }
 
